@@ -1,0 +1,5 @@
+:root{
+    background-image: url('../../public/svg/bg.svg');
+    background-size: cover;
+    z-index: -10;
+}
