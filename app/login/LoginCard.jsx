@@ -5,8 +5,16 @@ import { useMutation } from '@tanstack/react-query';
 import Http from '@/lib/http';
 import urls from '@/lib/urls'
 import toast from 'react-hot-toast';
+import Cookies from 'js-cookie';
+import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { isExpired } from 'react-jwt';
 
 const LoginCard = () => {
+
+    const [isReady, setIsReady] = useState(false)
+    const router = useRouter()
 
     const http = new Http()
 
@@ -16,16 +24,30 @@ const LoginCard = () => {
         mutationFn: async data => await http.post(urls.login, data),
         onSuccess: (data) => {
             toast.success('Logged in successfully')
-            console.log('Login successful:', data?.data);
+            Cookies.set('token', data?.data?.data)
             reset()
+            router.replace('/home')
         },
         onError: (error) => {
             toast.error(error?.response?.data?.message)
         },
     });
 
+    useEffect(() => {
+        const token = Cookies.get("token")
+        const isTokenExpired = isExpired(token);
+        if (!isTokenExpired) {
+            redirect('/home')
+        }
+        setIsReady(true)
+    }, [])
+
     const submitHandler = (data) => {
         mutation.mutate(data);
+    }
+
+    if (!isReady) {
+        return <div className='text-2xl text-white'>Loading...</div>
     }
 
     return (
