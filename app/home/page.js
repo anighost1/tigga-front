@@ -10,7 +10,7 @@ const Home = () => {
             _id: 1,
             name: 'ATDO',
             description: 'A todo application by AT to maintain your rozmarra ke kaam',
-            link: 'http://localhost:6973/'
+            link: 'https://atdo.tigga.in/'
         }
     ]
 
